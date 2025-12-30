@@ -5,7 +5,7 @@
 
 Name:		python-dirty-equals
 Version:	0.9.0
-Release:	2
+Release:	3
 Summary:	Doing dirty (but extremely useful) things with equals
 URL:		https://pypi.org/project/dirty-equals/
 License:	MIT
