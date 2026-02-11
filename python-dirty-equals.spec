@@ -27,6 +27,7 @@ BuildRequires:	python%{pyver}dist(pytest)
 BuildRequires:	python%{pyver}dist(pytest-examples)
 BuildRequires:	python%{pyver}dist(pytest-mock)
 BuildRequires:	python%{pyver}dist(pytz)
+BuildRequires:	python%{pyver}dist(tzdata)
 %endif
 Requires:	python%{pyver}dist(pytz) >= 2021.3
 
