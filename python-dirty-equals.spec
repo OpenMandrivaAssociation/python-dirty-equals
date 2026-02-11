@@ -1,23 +1,25 @@
 %define module dirty-equals
 %define oname dirty_equals
-# disable tests for abf
-%bcond_with test
+
+%bcond tests 1
 
 Name:		python-dirty-equals
-Version:	0.9.0
-Release:	3
+Version:	0.11
+Release:	1
 Summary:	Doing dirty (but extremely useful) things with equals
-URL:		https://pypi.org/project/dirty-equals/
 License:	MIT
 Group:		Development/Python
-Source0:	https://files.pythonhosted.org/packages/source/d/dirty-equals/%{oname}-%{version}.tar.gz
+URL:		https://github.com/samuelcolvin/dirty-equals
+Source0:	https://files.pythonhosted.org/packages/source/d/%{module}/%{oname}-%{version}.tar.gz#/%{name}-%{version}.tar.gz
 BuildSystem:	python
 BuildArch:	noarch
 
 BuildRequires:	python
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	python%{pyver}dist(hatchling)
-%if %{with test}
+BuildRequires:	python%{pyver}dist(pip)
+BuildRequires:	python%{pyver}dist(wheel)
+%if %{with tests}
 BuildRequires:	python%{pyver}dist(packaging)
 BuildRequires:	python%{pyver}dist(pydantic)
 BuildRequires:	python%{pyver}dist(poetry-core)
@@ -39,22 +41,16 @@ dirty-equals can be used in whatever context you like, but it comes into
 its own when writing unit tests for applications where you're commonly
 checking the response to API calls and the contents of a database.
 
-%prep
-%autosetup -p1 -n %{oname}-%{version}
-
-%build
-%py_build
-
-%install
-%py3_install
-
-%if %{with test}
+%if %{with tests}
 %check
-%{__python} -m pytest --import-mode append -v tests/
+export CI=true
+export PYTHONPATH="%{buildroot}%{python_sitelib}:${PWD}"
+# Skip failing tests in py3.14 - https://github.com/samuelcolvin/dirty-equals/issues/112
+pytest tests/ -k "not test_is_ip_true"
 %endif
 
 %files
-%{py_sitedir}/%{oname}
-%{py_sitedir}/%{oname}-%{version}.dist-info
-%license LICENSE
 %doc README.md
+%license LICENSE
+%{py_sitedir}/%{oname}
+%{py_sitedir}/%{oname}-%{version}.dist-info/
